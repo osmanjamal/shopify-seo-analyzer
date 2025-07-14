@@ -1,0 +1,209 @@
+# ===================================
+# Git
+# ===================================
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# ===================================
+# Dependencies
+# ===================================
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm/
+.yarn/
+.pnp.*
+
+# ===================================
+# Development files
+# ===================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ===================================
+# Environment files
+# ===================================
+.env
+.env.*
+!.env.example
+secrets/
+config/local.json
+config/development.json
+
+# ===================================
+# Test files
+# ===================================
+coverage/
+.nyc_output/
+test/
+tests/
+spec/
+__tests__/
+*.test.js
+*.spec.js
+jest.config.js
+.jest/
+cypress/
+playwright/
+
+# ===================================
+# Build files
+# ===================================
+dist/
+build/
+*.log
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist/
+.serverless/
+.fusebox/
+
+# ===================================
+# Documentation
+# ===================================
+docs/
+*.md
+!README.md
+LICENSE
+
+# ===================================
+# CI/CD
+# ===================================
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+Jenkinsfile
+azure-pipelines.yml
+bitbucket-pipelines.yml
+
+# ===================================
+# Docker files
+# ===================================
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# ===================================
+# Temporary files
+# ===================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+cache/
+
+# ===================================
+# Logs
+# ===================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ===================================
+# Database
+# ===================================
+*.sqlite
+*.sqlite3
+*.db
+database/backups/
+migrations/dev/
+database/seeds/
+
+# ===================================
+# User uploads
+# ===================================
+uploads/
+public/uploads/
+media/
+static/uploads/
+
+# ===================================
+# Exports and reports
+# ===================================
+exports/
+reports/
+backups/
+*.dump
+*.sql
+*.sql.gz
+*.tar.gz
+*.zip
+
+# ===================================
+# SSL Certificates (for development)
+# ===================================
+*.pem
+*.key
+*.crt
+*.csr
+ssl/
+certs/
+config/certs/
+
+# ===================================
+# Scripts (development only)
+# ===================================
+scripts/dev/
+scripts/test/
+scripts/local/
+
+# ===================================
+# Monitoring
+# ===================================
+monitoring/
+grafana/
+prometheus/
+
+# ===================================
+# Miscellaneous
+# ===================================
+.eslintrc*
+.prettierrc*
+.editorconfig
+.gitkeep
+.nvmrc
+.npmrc
+nodemon.json
+pm2.json
+ecosystem.config.js
+webpack.config.dev.js
+rollup.config.dev.js
+
+# ===================================
+# Keep these files
+# ===================================
+!package.json
+!package-lock.json
+!yarn.lock
+!pnpm-lock.yaml
+
+# Backend specific
+!backend/package.json
+!backend/package-lock.json
+
+# Frontend specific
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/public/
+frontend/src/
+
+# Keep production scripts
+!scripts/backup.sh
+!scripts/health-check.sh
+!scripts/migrate.js
+!scripts/seed-prod.js

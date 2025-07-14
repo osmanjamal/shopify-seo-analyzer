@@ -1,0 +1,351 @@
+{
+  "features": {
+    "auth": {
+      "googleOAuth": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Enable Google OAuth authentication",
+        "rolloutPercentage": 100
+      },
+      
+      "twoFactorAuth": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Two-factor authentication support",
+        "rolloutPercentage": 100,
+        "userGroups": ["premium", "enterprise"]
+      },
+      
+      "passwordlessLogin": {
+        "enabled": false,
+        "environments": ["development"],
+        "description": "Magic link authentication",
+        "rolloutPercentage": 0
+      },
+      
+      "ssoIntegration": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Single Sign-On for enterprise",
+        "rolloutPercentage": 100,
+        "userGroups": ["enterprise"]
+      }
+    },
+    
+    "shopify": {
+      "productAnalysis": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Shopify product SEO analysis",
+        "rolloutPercentage": 100
+      },
+      
+      "bulkEditing": {
+        "enabled": true,
+        "environments": ["staging", "production"],
+        "description": "Bulk edit SEO metadata",
+        "rolloutPercentage": 100,
+        "userGroups": ["professional", "enterprise"]
+      },
+      
+      "autoOptimization": {
+        "enabled": false,
+        "environments": ["development"],
+        "description": "AI-powered auto-optimization",
+        "rolloutPercentage": 10,
+        "betaUsers": true
+      },
+      
+      "competitorPricing": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Competitor price tracking",
+        "rolloutPercentage": 50,
+        "userGroups": ["enterprise"]
+      }
+    },
+    
+    "analytics": {
+      "realtimeData": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Real-time analytics dashboard",
+        "rolloutPercentage": 100
+      },
+      
+      "predictiveAnalytics": {
+        "enabled": false,
+        "environments": ["development", "staging"],
+        "description": "AI-powered traffic predictions",
+        "rolloutPercentage": 25,
+        "betaUsers": true
+      },
+      
+      "customDashboards": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Customizable dashboard layouts",
+        "rolloutPercentage": 100,
+        "userGroups": ["professional", "enterprise"]
+      },
+      
+      "advancedSegmentation": {
+        "enabled": true,
+        "environments": ["staging", "production"],
+        "description": "Advanced user segmentation",
+        "rolloutPercentage": 75
+      }
+    },
+    
+    "seo": {
+      "keywordTracking": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Keyword position tracking",
+        "rolloutPercentage": 100
+      },
+      
+      "competitorAnalysis": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Competitor SEO analysis",
+        "rolloutPercentage": 100
+      },
+      
+      "aiContentSuggestions": {
+        "enabled": true,
+        "environments": ["staging", "production"],
+        "description": "AI-powered content recommendations",
+        "rolloutPercentage": 60,
+        "apiKeyRequired": true
+      },
+      
+      "schemaGenerator": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Structured data generator",
+        "rolloutPercentage": 100
+      },
+      
+      "voiceSearchOptimization": {
+        "enabled": false,
+        "environments": ["development"],
+        "description": "Voice search optimization tools",
+        "rolloutPercentage": 0,
+        "plannedRelease": "2024-Q3"
+      }
+    },
+    
+    "reporting": {
+      "pdfExports": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "PDF report generation",
+        "rolloutPercentage": 100
+      },
+      
+      "whiteLabel": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "White-label report branding",
+        "rolloutPercentage": 100,
+        "userGroups": ["enterprise"]
+      },
+      
+      "scheduledReports": {
+        "enabled": true,
+        "environments": ["staging", "production"],
+        "description": "Automated report scheduling",
+        "rolloutPercentage": 100,
+        "userGroups": ["professional", "enterprise"]
+      },
+      
+      "customTemplates": {
+        "enabled": false,
+        "environments": ["development"],
+        "description": "Custom report templates",
+        "rolloutPercentage": 0,
+        "plannedRelease": "2024-Q2"
+      }
+    },
+    
+    "performance": {
+      "cdnIntegration": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "CDN for static assets",
+        "rolloutPercentage": 100
+      },
+      
+      "lazyLoading": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Lazy load components",
+        "rolloutPercentage": 100
+      },
+      
+      "webWorkers": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Web workers for heavy computations",
+        "rolloutPercentage": 50,
+        "browserSupport": ["chrome", "firefox", "edge"]
+      },
+      
+      "preloadAnalytics": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Preload analytics data",
+        "rolloutPercentage": 75
+      }
+    },
+    
+    "experimental": {
+      "darkMode": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Dark mode theme",
+        "rolloutPercentage": 100
+      },
+      
+      "mobileApp": {
+        "enabled": false,
+        "environments": ["development"],
+        "description": "Progressive Web App features",
+        "rolloutPercentage": 0,
+        "plannedRelease": "2024-Q4"
+      },
+      
+      "blockchainVerification": {
+        "enabled": false,
+        "environments": [],
+        "description": "Blockchain-based report verification",
+        "rolloutPercentage": 0,
+        "experimental": true
+      },
+      
+      "voiceCommands": {
+        "enabled": false,
+        "environments": ["development"],
+        "description": "Voice command interface",
+        "rolloutPercentage": 5,
+        "betaUsers": true
+      }
+    },
+    
+    "integrations": {
+      "slack": {
+        "enabled": true,
+        "environments": ["development", "staging", "production"],
+        "description": "Slack notifications",
+        "rolloutPercentage": 100
+      },
+      
+      "zapier": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Zapier integration",
+        "rolloutPercentage": 100,
+        "userGroups": ["professional", "enterprise"]
+      },
+      
+      "dataStudio": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Google Data Studio connector",
+        "rolloutPercentage": 100,
+        "userGroups": ["enterprise"]
+      },
+      
+      "webhooks": {
+        "enabled": true,
+        "environments": ["staging", "production"],
+        "description": "Custom webhook endpoints",
+        "rolloutPercentage": 100,
+        "userGroups": ["professional", "enterprise"]
+      }
+    },
+    
+    "security": {
+      "ipWhitelisting": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "IP whitelist for API access",
+        "rolloutPercentage": 100,
+        "userGroups": ["enterprise"]
+      },
+      
+      "auditLog": {
+        "enabled": true,
+        "environments": ["production"],
+        "description": "Detailed audit logging",
+        "rolloutPercentage": 100,
+        "userGroups": ["professional", "enterprise"]
+      },
+      
+      "dataEncryption": {
+        "enabled": true,
+        "environments": ["staging", "production"],
+        "description": "At-rest data encryption",
+        "rolloutPercentage": 100
+      },
+      
+      "sessionRecording": {
+        "enabled": false,
+        "environments": [],
+        "description": "User session recording for debugging",
+        "rolloutPercentage": 0,
+        "requiresConsent": true
+      }
+    }
+  },
+  
+  "rolloutStrategies": {
+    "percentage": {
+      "description": "Random percentage-based rollout",
+      "seedType": "userId"
+    },
+    
+    "userGroup": {
+      "description": "Rollout to specific user tiers",
+      "groups": ["free", "starter", "professional", "enterprise"]
+    },
+    
+    "betaUsers": {
+      "description": "Rollout to beta testers only",
+      "requiresOptIn": true
+    },
+    
+    "geographic": {
+      "description": "Geographic-based rollout",
+      "regions": ["us", "eu", "asia", "global"]
+    },
+    
+    "device": {
+      "description": "Device-specific rollout",
+      "types": ["desktop", "mobile", "tablet"]
+    }
+  },
+  
+  "overrides": {
+    "users": {
+      "admin@seoanalyzer.app": ["*"],
+      "beta@seoanalyzer.app": ["experimental.*", "*.betaUsers"]
+    },
+    
+    "apiKeys": {
+      "test-key-123": ["shopify.autoOptimization", "seo.aiContentSuggestions"]
+    },
+    
+    "ipAddresses": {
+      "192.168.1.1": ["experimental.*"]
+    }
+  },
+  
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2024-01-15T00:00:00Z",
+    "environment": "production",
+    "configSource": "file"
+  }
+}

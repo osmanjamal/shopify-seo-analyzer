@@ -1,0 +1,220 @@
+{
+  "name": "shopify-seo-analyzer",
+  "version": "2.0.0",
+  "description": "Comprehensive SEO analysis and optimization platform for Shopify stores",
+  "private": true,
+  "author": {
+    "name": "Your Company Name",
+    "email": "support@yourdomain.com",
+    "url": "https://yourdomain.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/shopify-seo-analyzer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/shopify-seo-analyzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/shopify-seo-analyzer/issues"
+  },
+  "keywords": [
+    "shopify",
+    "seo",
+    "analytics",
+    "ecommerce",
+    "optimization",
+    "google-analytics",
+    "search-console",
+    "keyword-tracking"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "start": "npm run start:prod",
+    "start:dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "start:prod": "node backend/dist/server.js",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd frontend && npm run start",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "clean": "npm run clean:frontend && npm run clean:backend && rimraf node_modules",
+    "clean:frontend": "cd frontend && rimraf build node_modules",
+    "clean:backend": "cd backend && rimraf dist node_modules",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:ci": "npm run test:backend:ci && npm run test:frontend:ci",
+    "test:backend:ci": "cd backend && npm run test:ci",
+    "test:frontend:ci": "cd frontend && npm run test:ci",
+    "test:e2e": "playwright test",
+    "test:integration": "cd backend && npm run test:integration",
+    "test:integration:ci": "cd backend && npm run test:integration:ci",
+    "test:smoke": "cd tests && npm run smoke",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:fix": "npm run lint:backend:fix && npm run lint:frontend:fix",
+    "lint:backend:fix": "cd backend && npm run lint:fix",
+    "lint:frontend:fix": "cd frontend && npm run lint:fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "type-check": "npm run type-check:backend && npm run type-check:frontend",
+    "type-check:backend": "cd backend && npm run type-check",
+    "type-check:frontend": "cd frontend && npm run type-check",
+    "migrate": "cd backend && npm run migrate:up",
+    "migrate:up": "cd backend && npm run migrate:up",
+    "migrate:down": "cd backend && npm run migrate:down",
+    "migrate:create": "cd backend && npm run migrate:create",
+    "migrate:prod": "cd backend && NODE_ENV=production npm run migrate:up",
+    "seed": "cd backend && npm run seed",
+    "seed:dev": "cd backend && npm run seed:dev",
+    "seed:prod": "cd backend && NODE_ENV=production npm run seed:prod",
+    "db:reset": "cd backend && npm run db:reset",
+    "db:setup": "npm run migrate && npm run seed:dev",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:rebuild": "docker-compose down && docker-compose build --no-cache && docker-compose up -d",
+    "deploy": "./scripts/deploy.sh",
+    "deploy:staging": "DEPLOY_ENV=staging ./scripts/deploy.sh",
+    "deploy:production": "DEPLOY_ENV=production ./scripts/deploy.sh",
+    "backup": "./scripts/backup.sh",
+    "health-check": "./scripts/health-check.sh",
+    "security:check": "npm audit && cd frontend && npm audit && cd ../backend && npm audit",
+    "security:fix": "npm audit fix && cd frontend && npm audit fix && cd ../backend && npm audit fix",
+    "deps:check": "npm-check-updates",
+    "deps:update": "npm-check-updates -u && npm install",
+    "analyze": "npm run analyze:frontend && npm run analyze:backend",
+    "analyze:frontend": "cd frontend && npm run analyze",
+    "analyze:backend": "cd backend && npm run analyze",
+    "docs:generate": "jsdoc -c jsdoc.config.json",
+    "docs:serve": "http-server ./docs -p 8080",
+    "prepare": "husky install",
+    "preinstall": "npx only-allow npm",
+    "postinstall": "npm run prepare",
+    "worker": "cd backend && npm run worker",
+    "scheduler": "cd backend && npm run scheduler",
+    "console": "cd backend && npm run console"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.5",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "husky": "^8.0.3",
+    "jsdoc": "^4.0.2",
+    "lint-staged": "^15.2.0",
+    "npm-check-updates": "^16.14.12",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "perf",
+          "test",
+          "chore",
+          "revert",
+          "build",
+          "ci"
+        ]
+      ]
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run test:ci"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "arrowParens": "always",
+    "endOfLine": "lf"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "es2022": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "volta": {
+    "node": "18.19.0",
+    "npm": "10.2.5"
+  }
+}

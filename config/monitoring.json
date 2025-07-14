@@ -1,0 +1,438 @@
+{
+  "services": {
+    "sentry": {
+      "enabled": true,
+      "dsn": "${SENTRY_DSN}",
+      "environment": "${NODE_ENV}",
+      "release": "${APP_VERSION}",
+      "sampleRate": {
+        "development": 1.0,
+        "staging": 0.5,
+        "production": 0.1
+      },
+      "tracesSampleRate": {
+        "development": 1.0,
+        "staging": 0.1,
+        "production": 0.01
+      },
+      "integrations": [
+        "Http",
+        "Express",
+        "Postgres",
+        "Redis"
+      ],
+      "ignoreErrors": [
+        "NetworkError",
+        "Request aborted",
+        "Non-Error promise rejection"
+      ],
+      "beforeSend": {
+        "filterSensitiveData": true,
+        "excludeHeaders": ["authorization", "cookie", "x-api-key"],
+        "excludeBody": ["password", "token", "secret"]
+      }
+    },
+    
+    "prometheus": {
+      "enabled": true,
+      "port": 9090,
+      "path": "/metrics",
+      "authentication": {
+        "enabled": true,
+        "username": "${PROMETHEUS_USER}",
+        "password": "${PROMETHEUS_PASSWORD}"
+      },
+      "metrics": {
+        "httpDuration": {
+          "name": "http_request_duration_seconds",
+          "help": "Duration of HTTP requests in seconds",
+          "buckets": [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10]
+        },
+        "httpRequests": {
+          "name": "http_requests_total",
+          "help": "Total number of HTTP requests"
+        },
+        "activeConnections": {
+          "name": "active_connections",
+          "help": "Number of active connections"
+        },
+        "dbQueryDuration": {
+          "name": "db_query_duration_seconds",
+          "help": "Duration of database queries in seconds",
+          "buckets": [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]
+        }
+      }
+    },
+    
+    "newRelic": {
+      "enabled": false,
+      "appName": "SEO Analyzer ${NODE_ENV}",
+      "licenseKey": "${NEW_RELIC_LICENSE_KEY}",
+      "logging": {
+        "level": "info"
+      },
+      "transaction_tracer": {
+        "enabled": true,
+        "transaction_threshold": 0.5
+      },
+      "error_collector": {
+        "enabled": true,
+        "ignore_status_codes": [401, 404]
+      }
+    },
+    
+    "cloudwatch": {
+      "enabled": true,
+      "region": "${AWS_REGION}",
+      "logGroupName": "/aws/elasticbeanstalk/seo-analyzer",
+      "logStreamName": "${INSTANCE_ID}",
+      "uploadRate": 10000,
+      "batchSize": 10000,
+      "metrics": {
+        "namespace": "SEOAnalyzer",
+        "dimensions": {
+          "Environment": "${NODE_ENV}",
+          "Service": "API"
+        }
+      }
+    },
+    
+    "datadog": {
+      "enabled": false,
+      "apiKey": "${DATADOG_API_KEY}",
+      "appKey": "${DATADOG_APP_KEY}",
+      "site": "datadoghq.com",
+      "env": "${NODE_ENV}",
+      "service": "seo-analyzer",
+      "version": "${APP_VERSION}",
+      "profiling": {
+        "enabled": true
+      },
+      "runtime_metrics": {
+        "enabled": true
+      }
+    }
+  },
+  
+  "healthChecks": {
+    "api": {
+      "enabled": true,
+      "path": "/health",
+      "interval": 30000,
+      "timeout": 5000,
+      "retries": 3,
+      "checks": {
+        "database": {
+          "enabled": true,
+          "critical": true,
+          "query": "SELECT 1"
+        },
+        "redis": {
+          "enabled": true,
+          "critical": true,
+          "command": "PING"
+        },
+        "disk": {
+          "enabled": true,
+          "critical": false,
+          "thresholdPercent": 90
+        },
+        "memory": {
+          "enabled": true,
+          "critical": false,
+          "thresholdPercent": 85
+        },
+        "externalApis": {
+          "enabled": true,
+          "critical": false,
+          "endpoints": [
+            "https://www.googleapis.com/discovery/v1/apis",
+            "https://api.shopify.com/admin/api/2024-01/shop.json"
+          ]
+        }
+      }
+    },
+    
+    "dependencies": {
+      "checkInterval": 300000,
+      "services": {
+        "googleSearchConsole": {
+          "url": "https://searchconsole.googleapis.com/$discovery/rest?version=v1",
+          "timeout": 10000,
+          "critical": true
+        },
+        "googleAnalytics": {
+          "url": "https://analyticsreporting.googleapis.com/$discovery/rest?version=v4",
+          "timeout": 10000,
+          "critical": true
+        },
+        "shopifyApi": {
+          "url": "https://api.shopify.com/admin/api/2024-01/shop.json",
+          "timeout": 10000,
+          "critical": false
+        }
+      }
+    }
+  },
+  
+  "alerts": {
+    "channels": {
+      "email": {
+        "enabled": true,
+        "recipients": ["alerts@seoanalyzer.app", "oncall@seoanalyzer.app"],
+        "throttle": {
+          "maxPerHour": 10,
+          "maxPerDay": 50
+        }
+      },
+      
+      "slack": {
+        "enabled": true,
+        "webhookUrl": "${SLACK_ALERTS_WEBHOOK}",
+        "channel": "#alerts",
+        "mentionOn": ["critical", "security"],
+        "throttle": {
+          "maxPerHour": 20,
+          "maxPerDay": 100
+        }
+      },
+      
+      "pagerduty": {
+        "enabled": true,
+        "integrationKey": "${PAGERDUTY_KEY}",
+        "severityMapping": {
+          "critical": "critical",
+          "high": "error",
+          "medium": "warning",
+          "low": "info"
+        }
+      },
+      
+      "sms": {
+        "enabled": false,
+        "provider": "twilio",
+        "recipients": ["+1234567890"],
+        "onlyFor": ["critical", "security"]
+      }
+    },
+    
+    "rules": {
+      "errorRate": {
+        "enabled": true,
+        "threshold": 0.05,
+        "window": 300000,
+        "severity": "high",
+        "message": "Error rate exceeded {{threshold}}% in the last {{window}} minutes"
+      },
+      
+      "responseTime": {
+        "enabled": true,
+        "threshold": 1000,
+        "percentile": 95,
+        "window": 300000,
+        "severity": "medium",
+        "message": "{{percentile}}th percentile response time exceeded {{threshold}}ms"
+      },
+      
+      "cpuUsage": {
+        "enabled": true,
+        "threshold": 80,
+        "duration": 300000,
+        "severity": "high",
+        "message": "CPU usage above {{threshold}}% for {{duration}} minutes"
+      },
+      
+      "memoryUsage": {
+        "enabled": true,
+        "threshold": 85,
+        "duration": 300000,
+        "severity": "high",
+        "message": "Memory usage above {{threshold}}% for {{duration}} minutes"
+      },
+      
+      "diskSpace": {
+        "enabled": true,
+        "threshold": 90,
+        "severity": "critical",
+        "message": "Disk space usage above {{threshold}}%"
+      },
+      
+      "databaseConnections": {
+        "enabled": true,
+        "threshold": 80,
+        "severity": "high",
+        "message": "Database connection pool at {{threshold}}% capacity"
+      },
+      
+      "queueBacklog": {
+        "enabled": true,
+        "threshold": 1000,
+        "severity": "medium",
+        "message": "Queue backlog exceeded {{threshold}} jobs"
+      },
+      
+      "apiRateLimit": {
+        "enabled": true,
+        "threshold": 0.8,
+        "severity": "medium",
+        "message": "API rate limit at {{threshold}}% of capacity"
+      },
+      
+      "securityIncident": {
+        "enabled": true,
+        "severity": "critical",
+        "immediateAlert": true,
+        "types": ["brute_force", "sql_injection", "xss_attempt", "unauthorized_access"]
+      },
+      
+      "certificateExpiry": {
+        "enabled": true,
+        "daysBeforeExpiry": 30,
+        "severity": "high",
+        "message": "SSL certificate expires in {{days}} days"
+      }
+    }
+  },
+  
+  "logging": {
+    "level": {
+      "development": "debug",
+      "staging": "info",
+      "production": "error"
+    },
+    
+    "transports": {
+      "console": {
+        "enabled": true,
+        "format": "json",
+        "colorize": true,
+        "timestamp": true
+      },
+      
+      "file": {
+        "enabled": true,
+        "filename": "logs/app.log",
+        "maxSize": "100m",
+        "maxFiles": 10,
+        "format": "json",
+        "compress": true
+      },
+      
+      "cloudwatch": {
+        "enabled": true,
+        "logGroupName": "/aws/application/seo-analyzer",
+        "logStreamName": "${INSTANCE_ID}",
+        "retentionInDays": 30
+      },
+      
+      "elasticsearch": {
+        "enabled": false,
+        "node": "${ELASTICSEARCH_URL}",
+        "index": "seo-analyzer-logs",
+        "pipeline": "logs"
+      }
+    },
+    
+    "fields": {
+      "standard": ["timestamp", "level", "message", "service"],
+      "http": ["method", "url", "status", "duration", "ip", "userAgent"],
+      "error": ["stack", "code", "type", "context"],
+      "user": ["userId", "email", "subscription"],
+      "custom": ["environment", "version", "region"]
+    }
+  },
+  
+  "performance": {
+    "apm": {
+      "enabled": true,
+      "sampleRate": 0.1,
+      "transactionMaxSpans": 1000,
+      "captureBody": "errors",
+      "captureHeaders": true
+    },
+    
+    "profiling": {
+      "enabled": false,
+      "cpuProfileRate": 100,
+      "heapProfileRate": 512000,
+      "duration": 60000
+    },
+    
+    "metrics": {
+      "httpLatency": {
+        "percentiles": [0.5, 0.9, 0.95, 0.99],
+        "buckets": [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]
+      },
+      
+      "customMetrics": {
+        "seoAnalysisDuration": {
+          "type": "histogram",
+          "unit": "seconds"
+        },
+        "keywordTrackingAccuracy": {
+          "type": "gauge",
+          "unit": "percentage"
+        },
+        "apiUsageByEndpoint": {
+          "type": "counter",
+          "labels": ["endpoint", "method", "status"]
+        }
+      }
+    }
+  },
+  
+  "reporting": {
+    "daily": {
+      "enabled": true,
+      "time": "09:00",
+      "timezone": "America/New_York",
+      "recipients": ["team@seoanalyzer.app"],
+      "metrics": [
+        "total_requests",
+        "error_rate",
+        "avg_response_time",
+        "unique_users",
+        "api_usage",
+        "system_health"
+      ]
+    },
+    
+    "weekly": {
+      "enabled": true,
+      "dayOfWeek": "monday",
+      "time": "09:00",
+      "recipients": ["management@seoanalyzer.app"],
+      "includeGraphs": true
+    },
+    
+    "incidents": {
+      "postMortemTemplate": true,
+      "autoGenerateReport": true,
+      "includeMetrics": true,
+      "includeLogs": true,
+      "retentionDays": 365
+    }
+  },
+  
+  "retention": {
+    "metrics": {
+      "raw": 7,
+      "hourly": 30,
+      "daily": 365,
+      "monthly": 1825
+    },
+    
+    "logs": {
+      "debug": 1,
+      "info": 7,
+      "warning": 30,
+      "error": 90,
+      "critical": 365
+    },
+    
+    "alerts": {
+      "resolved": 30,
+      "unresolved": 365
+    }
+  }
+}

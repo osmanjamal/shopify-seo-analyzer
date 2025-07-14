@@ -1,0 +1,144 @@
+{
+  "short_name": "SEO Analyzer",
+  "name": "SEO Analyzer for Shopify",
+  "description": "Professional SEO analysis tool for Shopify stores. Track keywords, monitor rankings, and optimize your e-commerce performance.",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-256x256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/icon-384x384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#5b47fb",
+  "orientation": "portrait-primary",
+  "dir": "ltr",
+  "lang": "en-US",
+  "categories": ["business", "productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard-desktop.png",
+      "type": "image/png",
+      "sizes": "1920x1080",
+      "platform": "wide",
+      "label": "Dashboard view showing SEO metrics"
+    },
+    {
+      "src": "/screenshots/keywords-desktop.png",
+      "type": "image/png",
+      "sizes": "1920x1080",
+      "platform": "wide",
+      "label": "Keyword tracking and analysis"
+    },
+    {
+      "src": "/screenshots/dashboard-mobile.png",
+      "type": "image/png",
+      "sizes": "750x1334",
+      "platform": "narrow",
+      "label": "Mobile dashboard view"
+    },
+    {
+      "src": "/screenshots/analytics-mobile.png",
+      "type": "image/png",
+      "sizes": "750x1334",
+      "platform": "narrow",
+      "label": "Mobile analytics view"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your SEO dashboard",
+      "url": "/dashboard?source=pwa",
+      "icons": [
+        {
+          "src": "/icons/dashboard-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Keywords",
+      "short_name": "Keywords",
+      "description": "Track keyword rankings",
+      "url": "/keywords?source=pwa",
+      "icons": [
+        {
+          "src": "/icons/keywords-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Analytics",
+      "description": "View analytics data",
+      "url": "/analytics?source=pwa",
+      "icons": [
+        {
+          "src": "/icons/analytics-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://seoanalyzer.app/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web+seoanalyzer",
+      "url": "/protocol?url=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  },
+  "handle_links": "preferred",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "features": {
+    "share_target": {
+      "action": "/share",
+      "method": "POST",
+      "enctype": "multipart/form-data",
+      "params": {
+        "title": "title",
+        "text": "text",
+        "url": "url"
+      }
+    }
+  }
+}

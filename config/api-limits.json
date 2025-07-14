@@ -1,0 +1,302 @@
+{
+  "global": {
+    "windowMs": 900000,
+    "max": 1000,
+    "message": "Too many requests from this IP, please try again later.",
+    "standardHeaders": true,
+    "legacyHeaders": false,
+    "skipSuccessfulRequests": false,
+    "skipFailedRequests": false
+  },
+  
+  "endpoints": {
+    "/api/auth/login": {
+      "windowMs": 900000,
+      "max": 5,
+      "skipSuccessfulRequests": true,
+      "message": "Too many login attempts, please try again later."
+    },
+    
+    "/api/auth/register": {
+      "windowMs": 3600000,
+      "max": 3,
+      "message": "Registration limit exceeded. Please try again in an hour."
+    },
+    
+    "/api/auth/forgot-password": {
+      "windowMs": 3600000,
+      "max": 3,
+      "message": "Too many password reset requests. Please try again later."
+    },
+    
+    "/api/auth/google": {
+      "windowMs": 900000,
+      "max": 10,
+      "message": "Too many OAuth attempts. Please try again later."
+    },
+    
+    "/api/analytics/*": {
+      "windowMs": 60000,
+      "max": 60,
+      "message": "Analytics API rate limit exceeded."
+    },
+    
+    "/api/keywords/*": {
+      "windowMs": 60000,
+      "max": 100,
+      "message": "Keywords API rate limit exceeded."
+    },
+    
+    "/api/technical/*": {
+      "windowMs": 300000,
+      "max": 20,
+      "message": "Technical analysis rate limit exceeded. These operations are resource-intensive."
+    },
+    
+    "/api/exports/*": {
+      "windowMs": 3600000,
+      "max": 10,
+      "message": "Export limit reached. Please wait before generating more reports."
+    },
+    
+    "/api/shopify/*": {
+      "windowMs": 60000,
+      "max": 40,
+      "message": "Shopify API rate limit exceeded."
+    },
+    
+    "/api/webhooks/*": {
+      "windowMs": 60000,
+      "max": 200,
+      "skipSuccessfulRequests": false,
+      "skipFailedRequests": true
+    },
+    
+    "/api/public/*": {
+      "windowMs": 60000,
+      "max": 30,
+      "message": "Public API rate limit exceeded."
+    }
+  },
+  
+  "userTiers": {
+    "free": {
+      "daily": {
+        "requests": 1000,
+        "keywords": 50,
+        "exports": 5,
+        "technicalScans": 10
+      },
+      "concurrent": {
+        "analysis": 1,
+        "exports": 1
+      }
+    },
+    
+    "starter": {
+      "daily": {
+        "requests": 5000,
+        "keywords": 200,
+        "exports": 20,
+        "technicalScans": 50
+      },
+      "concurrent": {
+        "analysis": 3,
+        "exports": 2
+      }
+    },
+    
+    "professional": {
+      "daily": {
+        "requests": 20000,
+        "keywords": 1000,
+        "exports": 100,
+        "technicalScans": 200
+      },
+      "concurrent": {
+        "analysis": 5,
+        "exports": 3
+      }
+    },
+    
+    "enterprise": {
+      "daily": {
+        "requests": 100000,
+        "keywords": 5000,
+        "exports": 500,
+        "technicalScans": 1000
+      },
+      "concurrent": {
+        "analysis": 10,
+        "exports": 5
+      }
+    }
+  },
+  
+  "apiKeys": {
+    "rateLimit": {
+      "windowMs": 60000,
+      "max": 100,
+      "keyGenerator": "apiKey"
+    },
+    
+    "quotas": {
+      "basic": {
+        "hourly": 100,
+        "daily": 1000,
+        "monthly": 20000
+      },
+      
+      "premium": {
+        "hourly": 500,
+        "daily": 5000,
+        "monthly": 100000
+      },
+      
+      "enterprise": {
+        "hourly": 2000,
+        "daily": 20000,
+        "monthly": 500000
+      }
+    }
+  },
+  
+  "googleApis": {
+    "searchConsole": {
+      "daily": 50000,
+      "perMinute": 1200,
+      "perSecond": 20,
+      "retryAfter": 60000,
+      "backoffMultiplier": 2
+    },
+    
+    "analytics": {
+      "daily": 50000,
+      "perMinute": 1000,
+      "perSecond": 10,
+      "retryAfter": 60000,
+      "backoffMultiplier": 2
+    },
+    
+    "pageSpeed": {
+      "daily": 25000,
+      "perMinute": 240,
+      "perSecond": 4,
+      "retryAfter": 120000,
+      "backoffMultiplier": 3
+    }
+  },
+  
+  "shopifyApis": {
+    "rest": {
+      "bucketSize": 40,
+      "leakRate": 2,
+      "costPerRequest": 1
+    },
+    
+    "graphql": {
+      "bucketSize": 1000,
+      "leakRate": 50,
+      "costCalculation": "actual"
+    },
+    
+    "webhooks": {
+      "maxPerMinute": 2000,
+      "maxConcurrent": 100,
+      "timeoutMs": 5000
+    }
+  },
+  
+  "internalServices": {
+    "database": {
+      "maxConnections": 100,
+      "maxQueriesPerSecond": 1000,
+      "slowQueryThreshold": 1000
+    },
+    
+    "redis": {
+      "maxConnections": 50,
+      "maxOperationsPerSecond": 10000,
+      "maxPipelineSize": 100
+    },
+    
+    "queue": {
+      "maxJobsPerMinute": 1000,
+      "maxConcurrentWorkers": 20,
+      "maxRetries": 5
+    }
+  },
+  
+  "protections": {
+    "ddos": {
+      "enabled": true,
+      "maxRequestsPerIp": 10000,
+      "windowMs": 300000,
+      "blockDurationMs": 3600000
+    },
+    
+    "bruteForce": {
+      "enabled": true,
+      "freeRetries": 3,
+      "minWaitMs": 1000,
+      "maxWaitMs": 3600000,
+      "lifetime": 86400000,
+      "blockDurationMs": 86400000
+    },
+    
+    "slowloris": {
+      "enabled": true,
+      "requestTimeoutMs": 30000,
+      "headersTimeoutMs": 10000
+    }
+  },
+  
+  "monitoring": {
+    "trackSuccessfulRequests": true,
+    "trackFailedRequests": true,
+    "includeUserAgent": true,
+    "includeIpAddress": false,
+    
+    "alerts": {
+      "enabled": true,
+      "thresholds": {
+        "errorRate": 0.1,
+        "avgResponseTime": 1000,
+        "rateLimitHits": 100
+      }
+    }
+  },
+  
+  "bypass": {
+    "ips": ["127.0.0.1", "::1"],
+    "userAgents": ["SEO-Analyzer-HealthCheck", "SEO-Analyzer-Monitor"],
+    "apiKeys": ["internal-service-key"],
+    "roles": ["admin", "system"]
+  },
+  
+  "responses": {
+    "tooManyRequests": {
+      "status": 429,
+      "headers": {
+        "Retry-After": "{{retryAfter}}",
+        "X-RateLimit-Limit": "{{limit}}",
+        "X-RateLimit-Remaining": "{{remaining}}",
+        "X-RateLimit-Reset": "{{resetTime}}"
+      },
+      "body": {
+        "error": "TOO_MANY_REQUESTS",
+        "message": "{{message}}",
+        "retryAfter": "{{retryAfter}}"
+      }
+    },
+    
+    "quotaExceeded": {
+      "status": 429,
+      "body": {
+        "error": "QUOTA_EXCEEDED",
+        "message": "API quota exceeded. Please upgrade your plan or wait until the quota resets.",
+        "upgradeUrl": "https://seoanalyzer.app/pricing"
+      }
+    }
+  }
+}

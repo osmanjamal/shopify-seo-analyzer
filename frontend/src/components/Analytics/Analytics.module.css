@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* Analytics Container Styles */
+.analyticsContainer {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Traffic Chart Styles */
+.chartContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.chartTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.chartControls {
+  display: flex;
+  gap: 12px;
+}
+
+.periodSelector {
+  display: flex;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.periodButton {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.periodButton:hover {
+  color: #333;
+}
+
+.periodButton.active {
+  background: white;
+  color: #5b47fb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.exportButton {
+  padding: 8px 16px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.exportButton:hover {
+  background: #f8f8f8;
+  border-color: #ccc;
+}
+
+.exportIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.chartWrapper {
+  height: 400px;
+  margin-top: 24px;
+}
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.metricItem {
+  text-align: center;
+}
+
+.metricValue {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.metricLabel {
+  font-size: 14px;
+  color: #666;
+  display: block;
+}
+
+.metricChange {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.metricChange.positive {
+  color: #10b981;
+  background: #d1fae5;
+}
+
+.metricChange.negative {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.changeIcon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Conversion Funnel Styles */
+.funnelContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.funnelHeader {
+  margin-bottom: 32px;
+}
+
+.funnelTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.funnelSubtitle {
+  font-size: 14px;
+  color: #666;
+}
+
+.funnelWrapper {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.funnelStage {
+  position: relative;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.funnelStage:hover {
+  transform: translateX(4px);
+}
+
+.funnelBar {
+  height: 60px;
+  background: linear-gradient(135deg, #5b47fb 0%, #7c3aed 100%);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.funnelStage:nth-child(2) .funnelBar {
+  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+}
+
+.funnelStage:nth-child(3) .funnelBar {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+}
+
+.funnelStage:nth-child(4) .funnelBar {
+  background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
+}
+
+.funnelContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: white;
+}
+
+.stageName {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.stageValue {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.dropoffIndicator {
+  position: absolute;
+  right: -80px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.funnelMetrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.funnelMetric {
+  text-align: center;
+}
+
+.funnelMetricValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.funnelMetricLabel {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Realtime Data Styles */
+.realtimeContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.realtimeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.titleSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.titleSection h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.connectionStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #f0f0f0;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.statusDot.connected {
+  background: #10b981;
+}
+
+.statusDot.disconnected {
+  background: #ef4444;
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.lastUpdated {
+  font-size: 14px;
+  color: #666;
+}
+
+.realtimeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.metricCard {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.activeUsersCard {
+  grid-column: span 2;
+  background: linear-gradient(135deg, #5b47fb 0%, #7c3aed 100%);
+  color: white;
+}
+
+.metricHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.metricIcon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.8;
+}
+
+.activeUsersCard .metricIcon {
+  color: white;
+}
+
+.metricHeader h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: #666;
+}
+
+.activeUsersCard h3 {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.metricValue {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bigNumber {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.number {
+  font-size: 32px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.metricTrend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.trendIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.realtimeDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.detailCard {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.detailCard h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.deviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.deviceItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.deviceIcon {
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+.deviceName {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+}
+
+.deviceCount {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-right: 12px;
+}
+
+.deviceBar {
+  width: 60px;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.deviceBarFill {
+  height: 100%;
+  background: #5b47fb;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.pagesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pageItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.pageRank {
+  width: 24px;
+  height: 24px;
+  background: #5b47fb;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pageInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pagePath {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.pageTitle {
+  font-size: 12px;
+  color: #666;
+}
+
+.pageUsers {
+  font-size: 14px;
+  color: #666;
+}
+
+.locationList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.locationItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.locationIcon {
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+.locationName {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+}
+
+.locationCount {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-right: 12px;
+}
+
+.locationBar {
+  width: 60px;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.locationBarFill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.activityFeed {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.activityFeed h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.activityTime {
+  font-size: 12px;
+  color: #666;
+  min-width: 60px;
+}
+
+.activityText {
+  font-size: 14px;
+  color: #333;
+}
+
+.noData {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  padding: 20px;
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f0f0f0;
+  border-top-color: #5b47fb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorMessage {
+  background: #fee2e2;
+  color: #ef4444;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chartHeader {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .chartControls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .periodSelector {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .realtimeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .activeUsersCard {
+    grid-column: span 1;
+  }
+
+  .realtimeDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .funnelMetrics {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .metricsRow {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div style="padding: 20px; font-family: Arial, sans-serif;">
+  <h1>Analytics Module CSS</h1>
+  <p>This CSS file provides comprehensive styling for all Analytics components including:</p>
+  <ul>
+    <li>TrafficChart component with responsive charts and controls</li>
+    <li>ConversionFunnel with visual funnel representation</li>
+    <li>RealtimeData with live updates and activity feed</li>
+    <li>Responsive design for all screen sizes</li>
+    <li>Modern UI with gradients, animations, and clean design</li>
+  </ul>
+</div>
+</body>
+</html>

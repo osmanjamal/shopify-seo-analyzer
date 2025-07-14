@@ -1,0 +1,338 @@
+{
+  "environment": "staging",
+  "debug": true,
+  "logLevel": "info",
+  
+  "server": {
+    "port": "${PORT}",
+    "host": "0.0.0.0",
+    "protocol": "https",
+    "corsOrigin": ["https://staging.seoanalyzer.app", "https://dev.seoanalyzer.app"],
+    "trustProxy": true,
+    "compression": true,
+    "rateLimitWindowMs": 900000,
+    "rateLimitMaxRequests": 200
+  },
+  
+  "database": {
+    "host": "${DB_HOST}",
+    "port": "${DB_PORT}",
+    "database": "seo_analyzer_staging",
+    "username": "${DB_USER}",
+    "password": "${DB_PASSWORD}",
+    "dialect": "postgres",
+    "logging": "error",
+    "pool": {
+      "max": 10,
+      "min": 2,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "retry": {
+      "max": 5,
+      "match": ["ECONNREFUSED", "ETIMEDOUT", "ENOTFOUND"]
+    },
+    "ssl": {
+      "require": true,
+      "rejectUnauthorized": false
+    }
+  },
+  
+  "redis": {
+    "host": "${REDIS_HOST}",
+    "port": "${REDIS_PORT}",
+    "password": "${REDIS_PASSWORD}",
+    "db": 1,
+    "keyPrefix": "seo_staging:",
+    "enableOfflineQueue": true,
+    "maxRetriesPerRequest": 3,
+    "tls": {
+      "rejectUnauthorized": false
+    }
+  },
+  
+  "auth": {
+    "jwtSecret": "${JWT_SECRET}",
+    "jwtExpiresIn": "1d",
+    "refreshTokenExpiresIn": "7d",
+    "sessionSecret": "${SESSION_SECRET}",
+    "cookieMaxAge": 86400000,
+    "bcryptRounds": 10,
+    "passwordMinLength": 8,
+    "maxLoginAttempts": 5,
+    "lockoutDuration": 600000,
+    "mfaEnabled": false
+  },
+  
+  "google": {
+    "oauth": {
+      "clientId": "${GOOGLE_CLIENT_ID}",
+      "clientSecret": "${GOOGLE_CLIENT_SECRET}",
+      "redirectUri": "https://staging.seoanalyzer.app/api/auth/google/callback",
+      "scopes": [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/webmasters",
+        "https://www.googleapis.com/auth/analytics.readonly"
+      ]
+    },
+    "apis": {
+      "searchConsole": {
+        "version": "v1",
+        "batchSize": 25,
+        "maxRetries": 3,
+        "retryDelay": 1000,
+        "timeout": 20000
+      },
+      "analytics": {
+        "version": "v4",
+        "batchSize": 5,
+        "maxRetries": 3,
+        "retryDelay": 1000,
+        "timeout": 20000
+      },
+      "pageSpeed": {
+        "version": "v5",
+        "strategy": ["mobile", "desktop"],
+        "maxRetries": 3,
+        "retryDelay": 3000,
+        "timeout": 45000,
+        "categories": ["performance", "accessibility", "best-practices", "seo"]
+      }
+    }
+  },
+  
+  "shopify": {
+    "apiVersion": "2024-01",
+    "appUrl": "https://staging.seoanalyzer.app",
+    "scopes": [
+      "read_products",
+      "read_content",
+      "read_themes",
+      "read_script_tags",
+      "read_analytics"
+    ],
+    "webhooks": {
+      "products/create": "/api/webhooks/shopify/products/create",
+      "products/update": "/api/webhooks/shopify/products/update",
+      "products/delete": "/api/webhooks/shopify/products/delete",
+      "themes/publish": "/api/webhooks/shopify/themes/publish"
+    },
+    "rateLimiting": {
+      "restLimit": 40,
+      "restRestore": 2,
+      "graphqlCost": 1000,
+      "graphqlRestore": 50
+    },
+    "webhookValidation": true
+  },
+  
+  "email": {
+    "provider": "mailgun",
+    "mailgun": {
+      "apiKey": "${MAILGUN_API_KEY}",
+      "domain": "staging.seoanalyzer.app",
+      "host": "api.mailgun.net",
+      "webhookSigningKey": "${MAILGUN_WEBHOOK_KEY}"
+    },
+    "from": {
+      "name": "SEO Analyzer Staging",
+      "email": "noreply@staging.seoanalyzer.app"
+    },
+    "templates": {
+      "welcomeEmail": true,
+      "passwordReset": true,
+      "reportEmail": true,
+      "alertEmail": true
+    },
+    "testMode": true
+  },
+  
+  "slack": {
+    "webhookUrl": "${SLACK_WEBHOOK_URL}",
+    "channel": "#seo-alerts-staging",
+    "username": "SEO Analyzer Staging",
+    "iconEmoji": ":test_tube:",
+    "enabled": true,
+    "alertTypes": ["critical", "warning", "info"]
+  },
+  
+  "storage": {
+    "provider": "s3",
+    "s3": {
+      "bucket": "seo-analyzer-staging",
+      "region": "${S3_REGION}",
+      "accessKeyId": "${S3_ACCESS_KEY_ID}",
+      "secretAccessKey": "${S3_SECRET_ACCESS_KEY}",
+      "endpoint": "${S3_ENDPOINT}",
+      "signatureVersion": "v4",
+      "maxFileSize": 26214400,
+      "allowedMimeTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+        "application/pdf",
+        "text/csv",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ]
+    }
+  },
+  
+  "queue": {
+    "provider": "bull",
+    "defaultJobOptions": {
+      "removeOnComplete": 500,
+      "removeOnFail": 1000,
+      "attempts": 3,
+      "backoff": {
+        "type": "exponential",
+        "delay": 3000
+      }
+    },
+    "queues": {
+      "analysis": {
+        "concurrency": 5,
+        "limiter": {
+          "max": 50,
+          "duration": 60000
+        }
+      },
+      "email": {
+        "concurrency": 10,
+        "limiter": {
+          "max": 500,
+          "duration": 60000
+        }
+      },
+      "export": {
+        "concurrency": 3,
+        "limiter": {
+          "max": 25,
+          "duration": 300000
+        }
+      }
+    }
+  },
+  
+  "cache": {
+    "ttl": {
+      "default": 300,
+      "user": 300,
+      "analytics": 300,
+      "keywords": 600,
+      "technical": 1800,
+      "shopify": 600
+    },
+    "invalidation": {
+      "onUpdate": true,
+      "batchSize": 250
+    }
+  },
+  
+  "monitoring": {
+    "sentry": {
+      "dsn": "${SENTRY_DSN}",
+      "environment": "staging",
+      "enabled": true,
+      "sampleRate": 0.5,
+      "tracesSampleRate": 0.1,
+      "beforeSend": true
+    },
+    "prometheus": {
+      "enabled": true,
+      "port": 9090,
+      "path": "/metrics"
+    },
+    "healthCheck": {
+      "enabled": true,
+      "path": "/health",
+      "interval": 30000,
+      "timeout": 5000
+    },
+    "logging": {
+      "provider": "winston",
+      "transports": ["file", "console"],
+      "level": "info"
+    }
+  },
+  
+  "features": {
+    "registration": true,
+    "googleAuth": true,
+    "shopifyIntegration": true,
+    "competitorAnalysis": true,
+    "aiRecommendations": true,
+    "whiteLabel": false,
+    "multiTenancy": false,
+    "advancedReporting": true,
+    "apiAccess": true,
+    "webhooks": true,
+    "customAlerts": true,
+    "bulkOperations": true,
+    "dataExport": true,
+    "scheduledReports": true,
+    "debugMode": true,
+    "testAccounts": true
+  },
+  
+  "limits": {
+    "maxWebsitesPerUser": 10,
+    "maxKeywordsPerWebsite": 200,
+    "maxCompetitorsPerWebsite": 15,
+    "maxAlertsPerUser": 30,
+    "maxApiRequestsPerDay": 20000,
+    "maxExportSizeMB": 200,
+    "maxReportGenerationTime": 300000,
+    "maxConcurrentAnalysis": 5
+  },
+  
+  "security": {
+    "helmet": {
+      "contentSecurityPolicy": {
+        "directives": {
+          "defaultSrc": ["'self'"],
+          "scriptSrc": ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
+          "styleSrc": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+          "fontSrc": ["'self'", "https://fonts.gstatic.com"],
+          "imgSrc": ["'self'", "data:", "https:"],
+          "connectSrc": ["'self'", "https://staging.seoanalyzer.app"]
+        }
+      },
+      "hsts": {
+        "maxAge": 2592000,
+        "includeSubDomains": true
+      }
+    },
+    "cors": {
+      "credentials": true,
+      "maxAge": 86400
+    },
+    "csrf": {
+      "enabled": true
+    },
+    "encryption": {
+      "algorithm": "aes-256-gcm",
+      "keyDerivation": "pbkdf2",
+      "iterations": 100000
+    }
+  },
+  
+  "testData": {
+    "enabled": true,
+    "seedOnStartup": false,
+    "testAccounts": [
+      {
+        "email": "test@staging.seoanalyzer.app",
+        "password": "TestPassword123!",
+        "role": "admin"
+      },
+      {
+        "email": "user@staging.seoanalyzer.app",
+        "password": "TestPassword123!",
+        "role": "user"
+      }
+    ]
+  }
+}
